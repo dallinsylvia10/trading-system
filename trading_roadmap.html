@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trading Roadmap — Paper to Live</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0f1923;
+    --border: #1c2e3d;
+    --green: #00e676;
+    --yellow: #ffc400;
+    --red: #ff1744;
+    --blue: #00b0ff;
+    --white: #e8f0f7;
+    --muted: #3d5a70;
+    --bebas: 'Bebas Neue', sans-serif;
+    --body: 'DM Sans', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--body);
+    min-height: 100vh;
+    padding: 48px 20px 80px;
+    background-image:
+      radial-gradient(ellipse 100% 60% at 50% 0%, rgba(0,176,255,0.06) 0%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent, transparent 80px, rgba(255,255,255,0.01) 80px, rgba(255,255,255,0.01) 81px),
+      repeating-linear-gradient(90deg, transparent, transparent 80px, rgba(255,255,255,0.01) 80px, rgba(255,255,255,0.01) 81px);
+  }
+
+  .container { max-width: 780px; margin: 0 auto; }
+
+  /* HEADER */
+  header { text-align: center; margin-bottom: 64px; }
+  .eyebrow {
+    font-family: var(--body);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 4px; color: var(--blue);
+    text-transform: uppercase; margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: center; gap: 12px;
+  }
+  .eyebrow::before, .eyebrow::after {
+    content: ''; width: 40px; height: 1px; background: var(--blue); opacity: .4;
+  }
+  h1 {
+    font-family: var(--bebas);
+    font-size: clamp(52px, 12vw, 96px);
+    line-height: .95; letter-spacing: 2px;
+    background: linear-gradient(135deg, #fff 0%, #00b0ff 50%, #00e676 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .tagline {
+    margin-top: 16px; font-size: 15px;
+    color: var(--muted); font-weight: 300; letter-spacing: .5px;
+  }
+  .tagline span { color: var(--green); font-weight: 500; }
+
+  /* WHERE YOU ARE NOW */
+  .status-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--green);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 56px;
+    animation: fadeUp .6s ease both;
+  }
+  .status-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--green);
+    animation: blink 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+  .status-text { font-size: 13px; color: #7a9ab5; }
+  .status-text strong { color: var(--white); font-weight: 600; }
+
+  /* PHASE LABEL */
+  .phase-label {
+    font-family: var(--bebas);
+    font-size: 11px; letter-spacing: 4px;
+    color: var(--muted); margin-bottom: 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .phase-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* PHASE CARD */
+  .phase {
+    position: relative;
+    margin-bottom: 12px;
+    animation: fadeUp .5s ease both;
+  }
+  .phase:nth-child(1) { animation-delay: .1s }
+  .phase:nth-child(2) { animation-delay: .2s }
+  .phase:nth-child(3) { animation-delay: .3s }
+  .phase:nth-child(4) { animation-delay: .4s }
+  .phase:nth-child(5) { animation-delay: .5s }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color .3s, transform .2s;
+    cursor: pointer;
+  }
+  .phase-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .phase-header {
+    display: flex; align-items: center; gap: 20px;
+    padding: 24px 28px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .phase-header::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .phase-num {
+    font-family: var(--bebas);
+    font-size: 48px; line-height: 1;
+    color: var(--accent); opacity: .25;
+    min-width: 48px;
+  }
+  .phase-meta { flex: 1; }
+  .phase-title {
+    font-family: var(--bebas);
+    font-size: 26px; letter-spacing: 1px;
+    color: var(--white); margin-bottom: 4px;
+  }
+  .phase-sub { font-size: 12px; color: var(--muted); font-weight: 400; }
+  
+  .phase-badge {
+    font-size: 11px; font-weight: 600; letter-spacing: 2px;
+    padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: rgba(0,0,0,.3);
+    white-space: nowrap;
+  }
+
+  .phase-body { padding: 24px 28px; }
+
+  .task-list { list-style: none; }
+  .task-list li {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+    font-size: 14px; color: #7a9ab5;
+    line-height: 1.5;
+  }
+  .task-list li:last-child { border-bottom: none; }
+  .task-list li::before {
+    content: '→';
+    color: var(--accent); font-weight: 700;
+    flex-shrink: 0; margin-top: 1px;
+  }
+  .task-list li strong { color: var(--white); font-weight: 500; }
+
+  .unlock-box {
+    margin-top: 20px;
+    background: rgba(0,0,0,.3);
+    border: 1px dashed var(--accent);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 13px; color: var(--muted);
+  }
+  .unlock-box strong { color: var(--accent); }
+
+  /* PHASE COLORS */
+  .p1 { --accent: var(--blue); }
+  .p2 { --accent: #7c4dff; }
+  .p3 { --accent: var(--yellow); }
+  .p4 { --accent: #ff6d00; }
+  .p5 { --accent: var(--green); }
+
+  /* YOU ARE HERE */
+  .you-are-here {
+    position: absolute;
+    top: 50%; right: -16px;
+    transform: translateY(-50%);
+    background: var(--green);
+    color: #000;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    z-index: 10;
+    white-space: nowrap;
+  }
+  .you-are-here::before {
+    content: '';
+    position: absolute;
+    left: -6px; top: 50%; transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-right-color: var(--green);
+    border-left: none;
+  }
+
+  /* CONNECTOR */
+  .connector {
+    width: 2px; height: 12px;
+    background: var(--border);
+    margin: 0 auto;
+  }
+
+  /* BOTTOM GOAL */
+  .goal {
+    margin-top: 48px;
+    text-align: center;
+    padding: 40px 32px;
+    background: linear-gradient(135deg, rgba(0,230,118,.05), rgba(0,176,255,.05));
+    border: 1px solid rgba(0,230,118,.2);
+    border-radius: 16px;
+    animation: fadeUp .6s .6s ease both;
+  }
+  .goal-icon { font-size: 40px; margin-bottom: 12px; }
+  .goal h2 {
+    font-family: var(--bebas);
+    font-size: 36px; letter-spacing: 2px;
+    color: var(--green); margin-bottom: 8px;
+  }
+  .goal p { font-size: 14px; color: var(--muted); max-width: 400px; margin: 0 auto; line-height: 1.6; }
+
+  /* RULES */
+  .rules {
+    margin-top: 48px;
+    animation: fadeUp .6s .7s ease both;
+  }
+  .rules-title {
+    font-family: var(--bebas);
+    font-size: 22px; letter-spacing: 2px;
+    color: var(--yellow); margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .rules-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media(max-width:500px){ .rules-grid { grid-template-columns: 1fr; } }
+  .rule {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    font-size: 13px; color: #5a7a90;
+    line-height: 1.5;
+  }
+  .rule strong { color: var(--yellow); display: block; margin-bottom: 4px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+
+  footer { text-align: center; margin-top: 56px; font-size: 11px; color: var(--muted); letter-spacing: 2px; font-family: var(--body); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Your Personal Plan</div>
+    <h1>PAPER<br>TO LIVE</h1>
+    <p class="tagline">A step-by-step roadmap to your <span>first real funded account</span></p>
+  </header>
+
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <div class="status-text">
+      <strong>You are here →</strong> Phase 1 — Day 1. You've built your indicator, made your first paper trade (+$60 on BTCUSD), and set up your journal. You're already ahead of most beginners.
+    </div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase-label">Phase 01 — Foundation</div>
+  <div class="phase p1" style="position:relative;">
+    <div class="you-are-here">📍 YOU ARE HERE</div>
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-num">01</div>
+        <div class="phase-meta">
+          <div class="phase-title">Learn the System</div>
+          <div class="phase-sub">Understand every signal before you trade it</div>
+        </div>
+        <div class="phase-badge">WEEK 1–2</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li><strong>Use 1H timeframe only</strong> — no 5m, no scalping yet</li>
+          <li><strong>Trade BTCUSD exclusively</strong> — master one asset first</li>
+          <li><strong>Log every signal</strong> in your journal, even ones you don't take</li>
+          <li><strong>Learn to read the info table</strong> — understand what each condition means before a signal fires</li>
+          <li><strong>Watch 20 candles</strong> after each signal — did price go to TP or SL first?</li>
+        </ul>
+        <div class="unlock-box">
+          <strong>✅ Unlock Phase 2 when:</strong> You've logged 10 trades and can explain why each signal fired without looking at this guide.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- PHASE 2 -->
+  <div class="phase-label">Phase 02 — Consistency</div>
+  <div class="phase p2">
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-num">02</div>
+        <div class="phase-meta">
+          <div class="phase-title">Build a Winning Record</div>
+          <div class="phase-sub">Prove the system works for you personally</div>
+        </div>
+        <div class="phase-badge">WEEK 2–4</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li><strong>Complete 30 paper trades</strong> — this is your minimum sample size</li>
+          <li><strong>Only take A+ signals</strong> — all 4 conditions must align, background color must match</li>
+          <li><strong>Never move your SL</strong> — let the indicator's levels do their job</li>
+          <li><strong>Track your win rate</strong> in the journal dashboard tab — aim for 45%+ (you only need 40% to be profitable)</li>
+          <li><strong>Test ETHUSD</strong> alongside BTC — see if signals are cleaner on one vs the other</li>
+        </ul>
+        <div class="unlock-box">
+          <strong>✅ Unlock Phase 3 when:</strong> 30 trades logged, win rate above 45%, and you haven't broken any rules in the last 10 trades.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- PHASE 3 -->
+  <div class="phase-label">Phase 03 — Risk Management</div>
+  <div class="phase p3">
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-num">03</div>
+        <div class="phase-meta">
+          <div class="phase-title">Master Position Sizing</div>
+          <div class="phase-sub">This is what separates profitable traders from everyone else</div>
+        </div>
+        <div class="phase-badge">WEEK 3–5</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li><strong>Learn the 1% rule</strong> — never risk more than 1% of your account on a single trade</li>
+          <li><strong>Calculate position size before every trade</strong> — Entry price, SL distance, account size → position size</li>
+          <li><strong>Practice on paper</strong> with a simulated $1,000 account — how many shares/units can you buy?</li>
+          <li><strong>Add a 4H timeframe</strong> to your routine — compare signal quality vs 1H</li>
+          <li><strong>Start tracking R-multiples</strong> — a 1R win means you made exactly what you risked. Aim for 2R average wins</li>
+        </ul>
+        <div class="unlock-box">
+          <strong>✅ Unlock Phase 4 when:</strong> You can calculate exact position size in under 30 seconds and your average win is above 1.5R.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- PHASE 4 -->
+  <div class="phase-label">Phase 04 — Simulation</div>
+  <div class="phase p4">
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-num">04</div>
+        <div class="phase-meta">
+          <div class="phase-title">Trade Like It's Real</div>
+          <div class="phase-sub">Simulate live conditions with zero excuses</div>
+        </div>
+        <div class="phase-badge">WEEK 5–8</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li><strong>Set a paper account to exactly $500</strong> — your future starting capital</li>
+          <li><strong>Apply strict 1% risk per trade</strong> — max $5 risk per trade on $500</li>
+          <li><strong>Run it for 30 more trades</strong> with real discipline — no revenge trades, no FOMO entries</li>
+          <li><strong>Track your emotions</strong> — add a note on how you felt on each trade. Bored? Anxious? Greedy?</li>
+          <li><strong>Aim to grow the $500 by 10%+</strong> — that's $550 target. Sounds small, it's not.</li>
+        </ul>
+        <div class="unlock-box">
+          <strong>✅ Unlock Phase 5 when:</strong> $500 paper account grown to $530+ over 30 trades with no rule breaks and consistent position sizing.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"></div>
+
+  <!-- PHASE 5 -->
+  <div class="phase-label">Phase 05 — Go Live</div>
+  <div class="phase p5">
+    <div class="phase-card">
+      <div class="phase-header">
+        <div class="phase-num">05</div>
+        <div class="phase-meta">
+          <div class="phase-title">Fund Your Live Account</div>
+          <div class="phase-sub">You've earned this. Now protect it.</div>
+        </div>
+        <div class="phase-badge">MONTH 2–3</div>
+      </div>
+      <div class="phase-body">
+        <ul class="task-list">
+          <li><strong>Start with $200–$500 maximum</strong> — only money you can afford to lose completely</li>
+          <li><strong>Trade exactly like your paper account</strong> — same rules, same position size, same timeframe</li>
+          <li><strong>Do not increase position size</strong> for the first 20 live trades — emotions will be different, give yourself time</li>
+          <li><strong>Set a daily loss limit</strong> — if you lose 3% in one day, close the platform and come back tomorrow</li>
+          <li><strong>Withdraw 50% of every profit milestone</strong> — hitting +20%? Take half out. Protect your gains.</li>
+        </ul>
+        <div class="unlock-box">
+          <strong>✅ You've made it when:</strong> 3 consecutive profitable months on your live account with consistent risk management. Then and only then, scale up.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOAL -->
+  <div class="goal">
+    <div class="goal-icon">🏆</div>
+    <h2>THE FINISH LINE</h2>
+    <p>A consistently profitable live trading account with proven risk management, a personal edge you trust, and the discipline to never blow up. That's the real goal — not one big win, but sustainable income.</p>
+  </div>
+
+  <!-- RULES -->
+  <div class="rules">
+    <div class="rules-title">Golden Rules — Never Break These</div>
+    <div class="rules-grid">
+      <div class="rule"><strong>🚫 No Signal = No Trade</strong>If there's no arrow on the chart, you do not enter. Period. Boredom is not a signal.</div>
+      <div class="rule"><strong>🚫 Never Move Your SL</strong>Once set, the stop loss stays. Moving it further away turns a small loss into an account killer.</div>
+      <div class="rule"><strong>🚫 1% Risk Max</strong>One trade should never make or break your account. Size your positions correctly every single time.</div>
+      <div class="rule"><strong>🚫 No Revenge Trading</strong>Just lost a trade? Step away. The worst trades happen right after a loss when emotions are running hot.</div>
+      <div class="rule"><strong>✅ Journal Every Trade</strong>If it's not logged it didn't happen. Your journal is your edge — it shows you patterns you can't see in the moment.</div>
+      <div class="rule"><strong>✅ Trust the System</strong>You built this indicator for a reason. Give it at least 50 trades before making any changes to the settings.</div>
+    </div>
+  </div>
+
+  <footer>TRADING ROADMAP · PAPER TO LIVE · BUILT WITH CLAUDE · APRIL 2026</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Smart Signal — Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050a0f;
+    --panel: #0b1520;
+    --border: #1a2e45;
+    --green: #00ff88;
+    --red: #ff3355;
+    --yellow: #ffd700;
+    --blue: #00b4ff;
+    --white: #e8edf2;
+    --muted: #4a6a85;
+    --mono: 'Share Tech Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--display);
+    min-height: 100vh;
+    padding: 40px 20px;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0,180,255,0.07), transparent),
+      radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,255,136,0.04), transparent);
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+
+  header { text-align: center; margin-bottom: 48px; }
+  .badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--blue);
+    border: 1px solid var(--blue);
+    padding: 4px 12px;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  h1 {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+  }
+  h1 span { color: var(--green); }
+  .subtitle { color: var(--muted); margin-top: 10px; font-size: 14px; letter-spacing: 1px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media(max-width:600px){ .grid-2 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .3s;
+  }
+  .card:hover { border-color: var(--blue); }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent, var(--blue)), transparent);
+  }
+  .card.green { --accent: var(--green); }
+  .card.red   { --accent: var(--red); }
+  .card.yellow{ --accent: var(--yellow); }
+
+  .card-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .card h2 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .card p  { font-size: 13px; color: #7a9ab5; line-height: 1.6; }
+
+  /* Signal row */
+  .signal-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    margin-bottom: 14px;
+    padding: 14px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .signal-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .signal-icon.buy  { background: rgba(0,255,136,.15); color: var(--green); border: 1px solid var(--green); }
+  .signal-icon.sell { background: rgba(255,51,85,.15);  color: var(--red);   border: 1px solid var(--red); }
+  .signal-icon.sl   { background: rgba(255,215,0,.1);   color: var(--yellow);border: 1px solid var(--yellow); }
+  .signal-icon.tp   { background: rgba(0,180,255,.1);   color: var(--blue);  border: 1px solid var(--blue); }
+  .signal-text h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .signal-text p  { font-size: 12px; color: #5a7a90; line-height: 1.5; }
+
+  /* Formula block */
+  .formula {
+    background: #07121c;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 12px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--green);
+    line-height: 1.8;
+  }
+  .formula .comment { color: var(--muted); }
+  .formula .key     { color: var(--blue); }
+  .formula .val     { color: var(--yellow); }
+
+  /* Steps */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex; gap: 16px; align-items: flex-start;
+    margin-bottom: 16px; padding: 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .step-num {
+    counter-increment: step;
+    min-width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--blue), #0060a0);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 13px; font-weight: bold;
+    flex-shrink: 0;
+  }
+  .step-num::before { content: counter(step); }
+  .step-body h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .step-body p  { font-size: 12px; color: #5a7a90; line-height: 1.5; }
+
+  /* Risk table */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+    color: var(--muted); text-align: left; padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  td { padding: 12px 14px; border-bottom: 1px solid rgba(26,46,69,.5); color: #7a9ab5; }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--white); font-weight: 600; }
+  .tag {
+    display: inline-block;
+    font-family: var(--mono); font-size: 10px;
+    padding: 2px 8px; border-radius: 4px; letter-spacing: 1px;
+  }
+  .tag.g { background: rgba(0,255,136,.1); color: var(--green); border: 1px solid rgba(0,255,136,.3); }
+  .tag.r { background: rgba(255,51,85,.1);  color: var(--red);   border: 1px solid rgba(255,51,85,.3); }
+  .tag.y { background: rgba(255,215,0,.1);  color: var(--yellow);border: 1px solid rgba(255,215,0,.3); }
+
+  .section-title {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 3px;
+    color: var(--blue); margin: 32px 0 16px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .warn {
+    background: rgba(255,215,0,.05);
+    border: 1px solid rgba(255,215,0,.2);
+    border-radius: 10px; padding: 16px 20px;
+    font-size: 13px; color: #a08a30; line-height: 1.6;
+    margin-top: 24px;
+  }
+  .warn strong { color: var(--yellow); }
+
+  footer { text-align: center; margin-top: 48px; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">PINE SCRIPT v5 // TRADINGVIEW</div>
+    <h1>AI <span>Smart Signal</span><br>Indicator Guide</h1>
+    <p class="subtitle">EMA × RSI × MACD × ATR — Multi-Confluence System</p>
+  </header>
+
+  <!-- SIGNALS -->
+  <div class="section-title">Signal Logic</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-label">How Buy & Sell signals are generated</div>
+    <div class="signal-row">
+      <div class="signal-icon buy">▲</div>
+      <div class="signal-text">
+        <h3 style="color:#00ff88">BUY Signal</h3>
+        <p>Triggered when: Fast EMA crosses <em>above</em> Slow EMA + MACD bullish cross + RSI between 40–65 + Price above 200 EMA (uptrend confirmed). All 4 conditions must align.</p>
+      </div>
+    </div>
+    <div class="signal-row">
+      <div class="signal-icon sell">▼</div>
+      <div class="signal-text">
+        <h3 style="color:#ff3355">SELL Signal</h3>
+        <p>Triggered when: Fast EMA crosses <em>below</em> Slow EMA + MACD bearish cross + RSI between 35–60 + Price below 200 EMA (downtrend confirmed). All 4 conditions must align.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SL/TP -->
+  <div class="section-title">Stop Loss & Take Profit</div>
+  <div class="grid-2">
+    <div class="card red">
+      <div class="card-label">Stop Loss Formula</div>
+      <h2>ATR-Based SL</h2>
+      <p>SL is placed dynamically using the Average True Range so it adapts to current volatility — not a fixed pip value.</p>
+      <div class="formula">
+        <span class="comment">// BUY Stop Loss</span><br>
+        <span class="key">SL</span> = close − (<span class="val">ATR</span> × <span class="val">1.5</span>)<br><br>
+        <span class="comment">// SELL Stop Loss</span><br>
+        <span class="key">SL</span> = close + (<span class="val">ATR</span> × <span class="val">1.5</span>)
+      </div>
+    </div>
+    <div class="card green">
+      <div class="card-label">Take Profit Formula</div>
+      <h2>ATR-Based TP</h2>
+      <p>TP is set at 2.5× ATR for a default Risk:Reward of 1:1.67 — adjustable in settings for your trading style.</p>
+      <div class="formula">
+        <span class="comment">// BUY Take Profit</span><br>
+        <span class="key">TP</span> = close + (<span class="val">ATR</span> × <span class="val">2.5</span>)<br><br>
+        <span class="comment">// SELL Take Profit</span><br>
+        <span class="key">TP</span> = close − (<span class="val">ATR</span> × <span class="val">2.5</span>)
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO INSTALL -->
+  <div class="section-title">Installation Steps</div>
+  <div class="steps">
+    <div class="step"><div class="step-num"></div><div class="step-body"><h3>Open TradingView Pine Editor</h3><p>At the bottom of any chart, click <strong>Pine Script Editor</strong>. Delete any existing code.</p></div></div>
+    <div class="step"><div class="step-num"></div><div class="step-body"><h3>Paste the .pine file contents</h3><p>Open the downloaded <code>AI_Trading_Indicator.pine</code> file, copy all code, and paste it into the editor.</p></div></div>
+    <div class="step"><div class="step-num"></div><div class="step-body"><h3>Click "Add to chart"</h3><p>Hit the <strong>Add to chart</strong> button (or Ctrl+Enter). The indicator loads with arrows, SL/TP labels, and an info table.</p></div></div>
+    <div class="step"><div class="step-num"></div><div class="step-body"><h3>Set Alerts</h3><p>Right-click the indicator → <strong>Add Alert</strong>. Choose "AI BUY Signal" or "AI SELL Signal" and set notification method.</p></div></div>
+    <div class="step"><div class="step-num"></div><div class="step-body"><h3>Tune the settings</h3><p>Click the ⚙️ icon on the indicator to adjust EMA lengths, RSI thresholds, and ATR multipliers to match your asset and timeframe.</p></div></div>
+  </div>
+
+  <!-- RECOMMENDED SETTINGS -->
+  <div class="section-title">Recommended Settings by Timeframe</div>
+  <div class="card" style="margin-bottom:16px; padding:0; overflow:hidden;">
+    <table>
+      <thead><tr><th>TIMEFRAME</th><th>ASSET</th><th>EMA FAST/SLOW</th><th>ATR SL/TP</th><th>STYLE</th></tr></thead>
+      <tbody>
+        <tr><td>1H</td><td>Forex, Crypto</td><td>21 / 50</td><td>1.5 / 2.5</td><td><span class="tag g">SWING</span></td></tr>
+        <tr><td>4H</td><td>Stocks, Crypto</td><td>21 / 50</td><td>1.5 / 3.0</td><td><span class="tag g">SWING</span></td></tr>
+        <tr><td>15M</td><td>Forex, Futures</td><td>9 / 21</td><td>1.2 / 2.0</td><td><span class="tag y">INTRADAY</span></td></tr>
+        <tr><td>Daily</td><td>Stocks, ETFs</td><td>50 / 200</td><td>2.0 / 4.0</td><td><span class="tag r">POSITION</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="warn">
+    <strong>⚠ Risk Disclaimer:</strong> This indicator is a decision-support tool, not financial advice. No indicator predicts the future with certainty. Always use proper position sizing, never risk more than 1–2% per trade, and backtest on your specific asset before live trading. Past performance does not guarantee future results.
+  </div>
+
+  <footer>AI SMART SIGNAL INDICATOR · PINE SCRIPT v5 · BUILT WITH CLAUDE</footer>
+</div>
+</body>
+</html>
